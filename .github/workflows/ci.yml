@@ -1,0 +1,27 @@
+name: Integracion Continua (CI) - Practica DevOps
+
+# Define cuándo se dispara este flujo
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Copiar el código del repositorio al runner de GitHub
+      - name: Descargar el código del repo
+        uses: actions/checkout@v4
+
+      # 2. Validar sintaxis y construcción de la imagen de Laravel
+      - name: Validar build de Laravel
+        run: |
+          docker build -t agasaja-laravel:test ./laravel-api
+
+      # 3. Validar sintaxis y construcción de la imagen de React
+      - name: Validar build de React
+        run: |
+          docker build -t agasaja-react:test ./reactfront
