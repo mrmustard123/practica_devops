@@ -15,6 +15,7 @@ class Account extends Model
         'account_type',
         'description',
     ];
+    
 
     // Relación: Una cuenta puede tener muchos movimientos en el libro diario (entry)
     public function entries()
