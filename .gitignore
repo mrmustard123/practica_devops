@@ -1,3 +1,5 @@
+.env
+
 # Laravel
 laravel-api/vendor/
 laravel-api/node_modules/
