@@ -13,31 +13,38 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      # 2. Configurar Docker Buildx (soporte para builds avanzados y caché)
+      # 2. Configurar emulación (requerido para builds limpios)
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # 3. Configurar Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 3. Autenticarse en Docker Hub usando los Secrets
+      # 4. Autenticarse en Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 4. Construir y publicar la imagen de Laravel
+      # 5. Construir y publicar la imagen de Laravel
       - name: Build and push Laravel Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./laravel-api
           file: ./laravel-api/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/agasaja-laravel:latest
 
-      # 5. Construir y publicar la imagen de React
+      # 6. Construir y publicar la imagen de React
       - name: Build and push React Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./reactfront
           file: ./reactfront/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/agasaja-react:latest
+          build-args: |
+            HTTP_PROXY=${{ secrets.HTTP_PROXY }}
+            HTTPS_PROXY=${{ secrets.HTTPS_PROXY }}
